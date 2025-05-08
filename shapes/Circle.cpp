@@ -14,7 +14,8 @@ double Circle::getArea() const
 
 double Circle::getPerimeter() const
 {
-    return 2 * M_PI * r_;
+    auto pi = getPi();
+    return 2 * pi * r_;
 }
 
 double Circle::getRadius() const
@@ -22,9 +23,15 @@ double Circle::getRadius() const
     return r_;
 }
 
+[[deprecated("Do not use it")]] double Circle::getPi() const
+{
+    return M_PI;
+}
+
 void Circle::print() const
 {
     std::cout << "Circle: radius: " << getRadius() << std::endl
               << "          area: " << getArea() << std::endl
-              << "     perimeter: " << getPerimeter() << std::endl;
+              << "     perimeter: " << getPerimeter() << std::endl
+              << "         color: " << color << std::endl;
 }

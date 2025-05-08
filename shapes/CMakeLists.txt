@@ -14,5 +14,5 @@ set(SRC_LIST
 )
 
 add_executable(${PROJECT_NAME} ${SRC_LIST})
-target_compile_options(${PROJECT_NAME} PUBLIC -Wall -Wpedantic -Wextra)
+target_compile_options(${PROJECT_NAME} PUBLIC -Wall -Wpedantic -Wextra -fconstexpr-ops-limit=933554432)
 # TODO: Add -Werror flag above:)

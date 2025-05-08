@@ -63,18 +63,52 @@ void findFirstShapeMatchingPredicate(const Collection& collection,
     }
 }
 
+constexpr int fibo(int n)
+{
+    if(n == 0)
+    {
+        return 0;
+    }
+    if(n == 1)
+    {
+        return 1;
+    }
+    return fibo(n-2) + fibo(n-1);
+}
+
+int fiboLoop(int n)
+{
+    int a = 1, b = 1;
+    int result = 0;
+    if(n == 0)
+    {
+        return 0;
+    }
+    if(n < 3)
+    {
+        return 1;
+    }
+    for(int i = 2; i < n; i++)
+    {
+        result = a + b;
+        a = b;
+        b = result;
+    }
+    return result;
+}
+
 int main()
 {
-    Collection shapes;
-    shapes.push_back(make_shared<Circle>(2.0));
-    shapes.push_back(make_shared<Circle>(3.0));
-    shapes.push_back(nullptr);
-    shapes.push_back(make_shared<Circle>(4.0));
-    shapes.push_back(make_shared<Rectangle>(10.0, 5.0));
-    shapes.push_back(make_shared<Square>(3.0));
-    shapes.push_back(make_shared<Circle>(4.0));
+    Collection shapes {
+        make_shared<Circle>(2.0), 
+        make_shared<Circle>(3.0),
+        nullptr,
+        make_shared<Circle>(4.0),
+        make_shared<Rectangle>(10.0, 5.0),
+        make_shared<Square>(3.0),
+        make_shared<Square>(Color::GREEN),
+        make_shared<Circle>(4.0)};
     printCollectionElements(shapes);
-
     cout << "Areas before sort: " << std::endl;
     printAreas(shapes);
 
@@ -88,6 +122,11 @@ int main()
 
     findFirstShapeMatchingPredicate(shapes, perimeterBiggerThan20, "perimeter bigger than 20");
     findFirstShapeMatchingPredicate(shapes, areaLessThan10, "area less than 10");
+    // desired behavior could be observed for n = 45
+    const auto n = 20;
+    constexpr auto x = fibo(n);
+    auto y = fiboLoop(n);
+    std::cout << "fibo(" << n << "): " << x  << ":" << y << std::endl; 
 
     return 0;
 }
