@@ -14,7 +14,7 @@ typedef vector<shared_ptr<Shape>> Collection;
 
 bool sortByArea(shared_ptr<Shape> first, shared_ptr<Shape> second)
 {
-    if(first == NULL || second == NULL)
+    if(first == nullptr || second == nullptr)
         return false;
     return (first->getArea() < second->getArea());
 }
@@ -52,7 +52,7 @@ void findFirstShapeMatchingPredicate(const Collection& collection,
                                      std::string info)
 {
     Collection::const_iterator iter = std::find_if(collection.begin(), collection.end(), predicate);
-    if(*iter != 0)
+    if(*iter != nullptr)
     {
         cout << "First shape matching predicate: " << info << endl;
         (*iter)->print();
