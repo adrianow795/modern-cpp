@@ -9,10 +9,26 @@
 #include "Circle.hpp"
 #include <map>
 #include <functional>
-
+#include <type_traits>
+#include <utility>
 using namespace std;
 
 typedef vector<shared_ptr<Shape>> Collection;
+
+template<
+    typename T,
+    typename = enable_if_t<is_base_of_v<Shape, T>>
+>
+void insertElement(Collection & col,const shared_ptr<T> &ptr )
+{
+    col.push_back(ptr);
+}
+
+template<class DerivedType, class... Arguments>
+shared_ptr<Shape> make_shape(Arguments&&... args)
+{
+    return make_shared<DerivedType>( forward<Arguments>(args)... );
+}
 
 void printCollectionElements(const Collection& collection)
 {
@@ -89,6 +105,12 @@ int main()
         make_shared<Square>(3.0),
         make_shared<Square>(Color::GREEN),
         make_shared<Circle>(4.0)};
+
+    insertElement(shapes, make_shared<Circle>(7.0));
+   // insertElement(shapes, make_shape<Rectangle>(910.0, 5.1));
+
+    shared_ptr<Shape> rectangle = make_shape<Rectangle>(91.4, 5.3);
+
     printCollectionElements(shapes);
     cout << "Areas before sort: " << std::endl;
     printAreas(shapes);
