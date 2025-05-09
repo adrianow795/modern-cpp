@@ -10,7 +10,7 @@ public:
     Rectangle(double x, double y);
     Rectangle(const Rectangle & other) = default;
 
-    double getArea() const override;
+    double getArea() const noexcept override;
     double getPerimeter() const override;
     double getX() const;
     double getY() const;

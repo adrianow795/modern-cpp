@@ -10,7 +10,7 @@ public:
     Square(Color c) : Rectangle(c){};
     Square(const Square & other) = default;
 
-    double getArea() const override;
+    double getArea() const noexcept override;
     double getPerimeter() const override;
     void print() const override;
 

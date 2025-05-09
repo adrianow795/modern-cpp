@@ -7,31 +7,12 @@
 #include "Rectangle.hpp"
 #include "Square.hpp"
 #include "Circle.hpp"
+#include <map>
+#include <functional>
 
 using namespace std;
 
 typedef vector<shared_ptr<Shape>> Collection;
-
-bool sortByArea(shared_ptr<Shape> first, shared_ptr<Shape> second)
-{
-    if(first == nullptr || second == nullptr)
-        return false;
-    return (first->getArea() < second->getArea());
-}
-
-bool perimeterBiggerThan20(shared_ptr<Shape> s)
-{
-    if(s)
-        return (s->getPerimeter() > 20);
-    return false;
-}
-
-bool areaLessThan10(shared_ptr<Shape> s)
-{
-    if(s)
-        return (s->getArea() < 10);
-    return false;
-}
 
 void printCollectionElements(const Collection& collection)
 {
@@ -48,7 +29,7 @@ void printAreas(const Collection& collection)
 }
 
 void findFirstShapeMatchingPredicate(const Collection& collection,
-                                     bool (*predicate)(shared_ptr<Shape> s),
+                                     function<bool(shared_ptr<Shape>)> predicate,
                                      std::string info)
 {
     Collection::const_iterator iter = std::find_if(collection.begin(), collection.end(), predicate);
@@ -112,21 +93,60 @@ int main()
     cout << "Areas before sort: " << std::endl;
     printAreas(shapes);
 
-    std::sort(shapes.begin(), shapes.end(), sortByArea);
+    std::sort(shapes.begin(), 
+              shapes.end(), 
+              [](shared_ptr<Shape> first, shared_ptr<Shape> second){
+                    if(first == nullptr || second == nullptr)
+                        return false;
+                    return (first->getArea() < second->getArea());
+              });
 
     cout << "Areas after sort: " << std::endl;
     printAreas(shapes);
 
     auto square = make_shared<Square>(4.0);
     shapes.push_back(square);
-
+    auto perimeterBiggerThan20 = [](shared_ptr<Shape> s)
+    {
+        if(s)
+            return (s->getPerimeter() > 20);
+        return false;
+    };
     findFirstShapeMatchingPredicate(shapes, perimeterBiggerThan20, "perimeter bigger than 20");
-    findFirstShapeMatchingPredicate(shapes, areaLessThan10, "area less than 10");
+
+    auto areaLessThanX = [x=10](shared_ptr<Shape> s)
+    {
+        if(s)
+            return (s->getArea() < 10);
+        return false;
+    };
+
+
+    findFirstShapeMatchingPredicate(shapes, areaLessThanX, "area less than 10");
     // desired behavior could be observed for n = 45
     const auto n = 20;
     constexpr auto x = fibo(n);
     auto y = fiboLoop(n);
     std::cout << "fibo(" << n << "): " << x  << ":" << y << std::endl; 
+    
+    std::cout << "Alignof circle: " << alignof(Circle) << std::endl;
+    std::cout << "**************************************"<< std::endl;
+    map<shared_ptr<Shape>, double> mapOfPer;
+    //mapOfPer.emplace(shapes[0], shapes[0]->getPerimeter());
+    for(const auto &el: shapes)
+    {
+        if(el)
+        {
+            mapOfPer.emplace(el, el->getPerimeter());
+        }
+    }
+
+    for(auto &&[key, value]: mapOfPer)
+    {
+        key->print();
+        std::cout << "perimenter:" << value << "\n ************** \n";
+    }
+
 
     return 0;
 }
